@@ -192,12 +192,28 @@ Options:
 > `-e KEY=VAL` Set environmental variables.
 >
 > `-d` Run container in background.
+>
+> `--rm` Automatically remove the container when it exits
+>
+> `-it` Interactive & pseudo-TTY.
+>
+> `--network NETWORK_NAME` Connect the container to a network.
 
-Example:
+Example 1: Launching a MariaDB Server
 
 ```sh
 $ docker run --name mariadb_server -v mariadb_data:/var/lib/mysql -p 0.0.0.0:3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mariadb:10.3
 # 6706d3d7066b8797f88f09ea86a04237d592e01d95bf70f153aed4511f80768b
+```
+
+Example 2: Running a temporary container to connect to the MariaDB server.
+
+```sh
+$ docker run --rm -it --network mariadb-server_default mariadb:10.3 mysql -h192.168.16.2 -uroot -p
+# Enter password:
+# Welcome to the MariaDB monitor. Commands end with ; or \g.
+# ...
+MariaDB [(none)]>
 ```
 
 ### List all running Containers
@@ -230,6 +246,39 @@ Example:
 $ docker ps -a
 # CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS                            PORTS   NAMES
 # 6706d3d7066b   mariadb:10.3   "docker-entrypoint.s…"   3 minutes ago   Exited (0) About a minute ago             mariadb_server
+```
+
+### Inspect a Container
+
+Usage:
+
+```sh
+docker inspect [OPTIONS] CONTAINER
+```
+
+Options:
+
+> `-f` Format the output using the given Go template
+
+Example 1: Shows all information about the Docker object.
+
+```sh
+$ docker inspect mariadb_server
+# ...
+# "NetworkSettings": {
+#   ...
+#   "Networks": {
+#     "mariadb-server_default": {
+#       ...
+#       "IPAddress": "192.168.16.2",
+# ...
+```
+
+Example 2: Shows only the IP address.
+
+```sh
+$ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb_server
+# 192.168.16.2
 ```
 
 ### Stop a running Container
@@ -311,9 +360,9 @@ Example:
 ```sh
 $ docker exec -it mariadb_server mysql -p
 # Enter password:
-# Welcome to the MariaDB monitor.  Commands end with ; or \g.
+# Welcome to the MariaDB monitor. Commands end with ; or \g.
 # ...
-# MariaDB [(none)]>
+MariaDB [(none)]>
 ```
 
 ## Other Resources
