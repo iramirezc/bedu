@@ -64,6 +64,8 @@ $ docker volume rm bedu_mongodb_data
 
 #### Run a container to start the MongoDB Server
 
+##### Option 1: Using `docker run` command
+
 > Options:
 >
 > `--name mongodb_server` Name for the container.
@@ -78,6 +80,36 @@ $ docker volume rm bedu_mongodb_data
 $ docker run --name mongodb_server -v bedu_mongodb_data:/data/db -p 0.0.0.0:27017:27017 -d mongo:4.0
 # ccf135833b88de2dc746a7a7f393af10083591deea6a3023fecfb755f7b79680
 ```
+
+##### Option 2: Using a `docker-compose.yaml` file
+
+Create a `docker-compose.yaml` in a `mongodb-server` folder with the following content:
+
+```yaml
+version: '3'
+
+services:
+  mongodb:
+    image: mongo:4.0
+    container_name: mongodb_server
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - 27017:27017
+
+volumes:
+  mongodb_data:
+    external: true
+```
+
+Then execute:
+
+```sh
+$ docker-compose up -d mongodb
+# Creating mongodb_server ... done
+```
+
+> More info: [Docker-Compose File - Cheat Sheet](/docs/docker-compose-cheat-sheet.md)
 
 #### Inspect that MongoDB Server is running
 
@@ -290,9 +322,235 @@ Create a new Database using `yourLastName_yourFistName` as the DB name. Then, cr
 
 #### Import data from a CSV file
 
-> NOTE: update the `docker-compose.yaml` file. And mount the data sets.
+In order to import the `csv` file to the MongoDB Server, we need to copy such file inside the Docker Container. The most easiest way to do this is to mount a folder with all your data sets as a volume pointing to any directory you choose inside the Docker Container.
+
+Placeholders:
+
+> `HOST_PATH` The directory in your host computer where you have the data sets.
 >
-> TODO:
+> `CONTAINER_PATH` The directory inside the Docker Container where you can access your data sets.
+
+Example values:
+
+> `HOST_PATH` = `/Users/isaac.ramirez/bedu/mongo-server/ml-1m`
+>
+> `CONTAINER_PATH` = `/usr/scr/data`
+
+##### Using `docker run` command
+
+Add the following option to the `docker run` command:
+
+```sh
+-v HOST_PATH:CONTAINER_PATH
+```
+
+Example:
+
+```sh
+$ docker run --name mongodb_server -v bedu_mongodb_data:/data/db -v /Users/isaac.ramirez/bedu/mongo-server/ml-1m:/usr/src/data -p 0.0.0.0:27017:27017 -d mongo:4.0
+# 612f26ac1b2a98d0290131241ae294fe2552f7236799df754514ea76307fde50
+```
+
+##### Using `docker-compose.yaml` file
+
+Add the following under `volumes:`
+
+```yaml
+    volumes:
+      - HOST_PATH:CONTAINER_PATH
+```
+
+Example:
+
+```yaml
+    volumes:
+      - bedu_mongodb_data:/data/db
+      - ./ml-1m:/usr/src/data
+```
+
+##### Import the CSV file using the `mongoimport` command
+
+Now that you have mounted the data sets inside the Docker Container you can run the `mongoimport` command:
+
+```sh
+$ docker exec mongodb_server mongoimport --db=ramirez_isaac --collection=users --type=csv --headerline --file=/usr/src/data/users-h.csv
+# 2019-12-20T08:59:51.063+0000 connected to: localhost
+# 2019-12-20T08:59:51.194+0000 imported 6040 documents
+```
+
+:cat: _**xercise 2**: Import the `ratings-h.csv` file using `mongoimport`. Then, import the `movies-h.csv` file using MongoDB Compass._
+
+#### JSON (JavaScript Object Notation)
+
+Example of a JSON object:
+
+```json
+{
+    "string": "myString",
+    "number": 27,
+    "boolean": true,
+    "date": "2019-12-20T22:42:08.127Z",
+    "null": null,
+    "object": {
+        "prop1": "anyString",
+        "prop2": 0
+    },
+    "array": ["cat", 99, false, { "data": null }]
+}
+```
+
+Example of a JSON array:
+
+```json
+[
+    {
+        "id": 1,
+        "firstName": "Roberto",
+        "lastName": "Gómez"
+    },
+    {
+        "id": 2,
+        "firstName": "María",
+        "lastName": "Mercedes"
+    }
+]
+```
+
+#### CRUD Operations
+
+##### Insert a new document (Create)
+
+```sh
+> use ramirez_isaac
+> db.users.insertOne({
+    "id": 1987,
+    "gen": "M",
+    "edad": 32,
+    "ocup": 10,
+    "cp": 44600
+})
+# {
+#   "acknowledged" : true,
+#   "insertedId" : ObjectId("5dfd4feea9288f2e0d4d55c2")
+# }
+>
+```
+
+##### Insert multiple documents (Create)
+
+```sh
+> db.users.insertMany([
+    {
+        "id": 6041,
+        "gen": "M",
+        "edad": 25,
+        "ocup": 15,
+        "cp": 11106
+    },
+    {
+        "id": 6042,
+        "gen": "F",
+        "edad": 40,
+        "ocup": 4,
+        "cp": 45123
+    },
+])
+# {
+#   "acknowledged" : true,
+#   "insertedIds" : [
+#       ObjectId("5dfd537ba9288f2e0d4d55c5"),
+#       ObjectId("5dfd537ba9288f2e0d4d55c6")
+#   ]
+# }
+>
+```
+
+##### Find a document by `ObjectId` (Read)
+
+```sh
+> db.users.findOne({ "_id": ObjectId("5dfd4feea9288f2e0d4d55c2") })
+# {
+#   "_id" : ObjectId("5dfd4feea9288f2e0d4d55c2"),
+#   "id" : 1987,
+#   "gen" : "H",
+#   "edad" : 32,
+#   "ocup" : 10,
+#   "cp" : "44600"
+# }
+>
+```
+
+##### Find a document by property (Read)
+
+```sh
+> db.users.findOne({ "edad": 32 })
+# {
+#   "_id" : ObjectId("5dfd4feea9288f2e0d4d55c2"),
+#   "id" : 1987,
+#   "gen" : "H",
+#   "edad" : 32,
+#   "ocup" : 10,
+#   "cp" : "44600"
+# }
+>
+```
+
+##### Find all documents
+
+```sh
+> db.users.find()
+# { "_id" : ObjectId("5dfd4b44ebbfc47a4c1decc2"), "id" : 2, "gen" : "M", "edad" : 56, "ocup" : 16, "cp" : 70072 }
+# { "_id" : ObjectId("5dfd4b44ebbfc47a4c1decc3"), "id" : 1, "gen" : "F", "edad" : 1, "ocup" : 10, "cp" : 48067 }
+# ...
+# Type "it" for more
+> it
+# { "_id" : ObjectId("5dfd4b44ebbfc47a4c1decd6"), "id" : 22, "gen" : "M", "edad" : 18, "ocup" : 15, "cp" : 53706 }
+# { "_id" : ObjectId("5dfd4b44ebbfc47a4c1decd7"), "id" : 23, "gen" : "M", "edad" : 35, "ocup" : 0, "cp" : 90049 }
+# ...
+# Type "it" for more
+>
+```
+
+##### Find all documents by searching criteria
+
+```sh
+> db.users.find({ "gen": "M", "ocup": 15 })
+# { "_id" : ObjectId("5dfd4b44ebbfc47a4c1decc4"), "id" : 3, "gen" : "M", "edad" : 25, "ocup" : 15, "cp" : 55117 }
+# { "_id" : ObjectId("5dfd4b44ebbfc47a4c1decd6"), "id" : 22, "gen" : "M", "edad" : 18, "ocup" : 15, "cp" : 53706 }
+# ...
+# Type "it" for more
+>
+```
+
+##### Update a single document based on the filter (Update)
+
+```sh
+> db.users.updateOne({ "id": 6042 }, { "$set": { "movie_genders": ["drama", "action", "triller"] } })
+# { "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+```
+
+##### Update multiple documents based on the filter (Update)
+
+```sh
+> db.users.updateMany({ "gen": "F" }, { "$set": { "movie_genders": ["romantic", "horror"] } })
+# { "acknowledged" : true, "matchedCount" : 1710, "modifiedCount" : 1710 }
+```
+
+##### Delete a single document based on the filter (Remove)
+
+```sh
+> db.users.deleteOne({ "id": 6042 })
+# { "acknowledged" : true, "deletedCount" : 1 }
+```
+
+##### Delete multiple documents based on the filter (Remove)
+
+```sh
+> db.users.deleteMany({ "edad": { "$lt": 10 } }) # less than 10 years
+# { "acknowledged" : true, "deletedCount" : 222 }
+```
+
+:cat: _**xercise 3**: Perform all the **CRUD** operations but using MongoDB Compass._
 
 ### Resources
 
