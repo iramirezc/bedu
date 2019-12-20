@@ -9,6 +9,7 @@ Content Session:
 * [MongoDB Server](#MongoDB-Server)
 * [MongoDB Client - Shell](#MongoDB-Client---Shell)
 * [MongoDB Client - GUI](#MongoDB-Client---GUI)
+* [The `mongo` Shell](#The-`mongo`-Shell)
 * [Resources](#Resources)
 
 ### Pre-Requisites
@@ -30,6 +31,10 @@ You can choose any of these or both:
 
 * [Robo 3T](https://robomongo.org/download)
 * [MongoDB Compass](https://www.mongodb.com/download-center/compass)
+
+**4. Download the data sets:**
+
+* [ml-1m](https://www.dropbox.com/s/08m65ee45t5225u/ml-1m.zip?dl=0)
 
 ### DB Storage
 
@@ -244,8 +249,54 @@ Placeholders:
 5. Click __Connect__
 6. You are all set!
 
+### The `mongo` Shell
+
+You can find most of the `mongo` commands in this [Mongo - Cheat Sheet](/docs/mongo-cheat-sheet.md) document.
+
+#### Create a new Database and a Collection
+
+Create a new Database using `yourLastName_yourFistName` as the DB name. Then, create an `users` collection.
+
+```sh
+> show dbs
+# admin   0.000GB
+# config  0.000GB
+# local   0.000GB
+> use ramirez_isaac
+# switched to db ramirez_isaac
+> db.createCollection('users')
+# { "ok" : 1 }
+> show dbs
+# admin          0.000GB
+# config         0.000GB
+# local          0.000GB
+# ramirez_isaac  0.000GB
+```
+
+#### Remove a Database
+
+```sh
+> use ramirez_isaac
+# switched to db ramirez_isaac
+> db.dropDatabase()
+# { "dropped" : "ramirez_isaac", "ok" : 1 }
+> show dbs
+# admin   0.000GB
+# config  0.000GB
+# local   0.000GB
+```
+
+:cat: _**xercise 1**: Try to remove and create (again) your database using the MongoDB GUI of your preference. Then, add a `movies` collection._
+
+#### Import data from a CSV file
+
+> NOTE: update the `docker-compose.yaml` file. And mount the data sets.
+>
+> TODO:
+
 ### Resources
 
 * [Mongo - Docker Hub](https://hub.docker.com/_/mongo)
 * [Docker Commands - Cheat Sheet](/docs/docker-cheat-sheet.md)
 * [Docker-Compose File - Cheat Sheet](/docs/docker-compose-cheat-sheet.md)
+* [Mongo - Cheat Sheet](/docs/mongo-cheat-sheet.md)
