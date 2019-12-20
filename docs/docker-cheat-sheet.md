@@ -4,11 +4,13 @@
 
 ### Docker version
 
+Usage:
+
 ```sh
 docker --version
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker --version
@@ -17,11 +19,13 @@ $ docker --version
 
 ### Docker help
 
+Usage:
+
 ```sh
 docker --help
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker --help
@@ -30,11 +34,13 @@ $ docker --help
 
 ### Docker help for a command
 
+Usage:
+
 ```sh
 docker COMMAND --help
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker run --help
@@ -44,11 +50,13 @@ $ docker run --help
 
 ### Docker Hello World
 
+Usage:
+
 ```sh
 docker run hello-world
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker run hello-world
@@ -64,13 +72,15 @@ $ docker run hello-world
 
 ## Docker Images
 
-### Download a Docker Image or a Repository
+### Download an Image or a Repository
+
+Usage:
 
 ```sh
 docker pull IMAGE[:TAG]
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker pull mariadb:10.4
@@ -79,13 +89,15 @@ $ docker pull mariadb:10.4
 # Status: Downloaded newer image for mariadb:10.4
 ```
 
-### List all your downloaded Docker Images
+### List all your downloaded Images
+
+Usage:
 
 ```sh
 docker image ls
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker image ls
@@ -93,13 +105,15 @@ $ docker image ls
 # mariadb      10.4   e93d99aa9076   4 days ago   355MB
 ```
 
-### Remove a Docker Image
+### Remove an Image
+
+Usage:
 
 ```sh
 docker image rm IMAGE[:TAG]
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker image rm mariadb:10.4
@@ -111,26 +125,30 @@ $ docker image rm mariadb:10.4
 
 ## Docker Volumes
 
-### Create a Docker Volume
+### Create a Volume
+
+Usage:
 
 ```sh
 docker volume create --name=NAME
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker volume create --name=mariadb_data
 # mariadb_data
 ```
 
-### List all your Docker Volumes
+### List all your Volumes
+
+Usage:
 
 ```sh
 docker volume ls
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker volume ls
@@ -138,15 +156,166 @@ $ docker volume ls
 # local               mariadb_data
 ```
 
-### Remove a Docker Volume
+### Remove a Volume
+
+Usage:
 
 ```sh
 docker volume rm NAME
 ```
 
-> Example
+Example:
 
 ```sh
 $ docker volume rm mariadb_data
 # mariadb_data
 ```
+
+## Docker Containers
+
+### Run a Container from a Docker Image
+
+Usage:
+
+```sh
+docker run [OPTIONS] IMAGE[:TAG] [COMMAND]
+```
+
+Options:
+
+> `--name NAME` Container's name.
+>
+> `-v VOLUME:CONTAINER_PATH` Bind mount a volume.
+>
+> `-p HOST_PORT:CONTAINER_PORT` Publish a container's port(s) to the host.
+>
+> `-e KEY=VAL` Set environmental variables.
+>
+> `-d` Run container in background.
+
+Example:
+
+```sh
+$ docker run --name mariadb_server -v mariadb_data:/var/lib/mysql -p 0.0.0.0:3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mariadb:10.3
+# 6706d3d7066b8797f88f09ea86a04237d592e01d95bf70f153aed4511f80768b
+```
+
+### List all running Containers
+
+Usage:
+
+```sh
+docker ps
+```
+
+Example:
+
+```sh
+$ docker ps
+# CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                    NAMES
+# 6706d3d7066b   mariadb:10.3   "docker-entrypoint.s…"   33 seconds ago   Up 32 seconds   0.0.0.0:3306->3306/tcp   mariadb_server
+```
+
+### List all Containers including the stopped ones
+
+Usage:
+
+```sh
+docker ps -a
+```
+
+Example:
+
+```sh
+$ docker ps -a
+# CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS                            PORTS   NAMES
+# 6706d3d7066b   mariadb:10.3   "docker-entrypoint.s…"   3 minutes ago   Exited (0) About a minute ago             mariadb_server
+```
+
+### Stop a running Container
+
+Usage:
+
+```sh
+docker stop CONTAINER
+```
+
+Example:
+
+```sh
+$ docker stop mariadb_server
+# mariadb_server
+```
+
+### Start an stopped Container
+
+Usage:
+
+```sh
+docker start CONTAINER
+```
+
+Example:
+
+```sh
+$ docker start mariadb_server
+# mariadb_server
+```
+
+### Restart a container
+
+Usage:
+
+```sh
+docker restart CONTAINER
+```
+
+Example:
+
+```sh
+$ docker restart mariadb_server
+# mariadb_server
+```
+
+### Remove an stopped Container
+
+Usage:
+
+```sh
+docker rm CONTAINER
+```
+
+Example:
+
+```sh
+$ docker rm mariadb_server
+# mariadb_server
+```
+
+### Execute a command inside a Container
+
+Usage:
+
+```sh
+docker exec [OPTIONS] CONTAINER COMMAND [ARGUMENTS...]
+```
+
+Options:
+
+> `-i` Interactive. Keep STDIN open even if not attached.
+>
+> `-t` Allocate a pseudo-TTY
+
+Example:
+
+```sh
+$ docker exec -it mariadb_server mysql -p
+# Enter password:
+# Welcome to the MariaDB monitor.  Commands end with ; or \g.
+# ...
+# MariaDB [(none)]>
+```
+
+## Other Resources
+
+* [Use the Docker command line](https://docs.docker.com/engine/reference/commandline/cli/)
