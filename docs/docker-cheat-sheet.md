@@ -206,7 +206,7 @@ $ docker run --name mariadb_server -v mariadb_data:/var/lib/mysql -p 0.0.0.0:330
 # 6706d3d7066b8797f88f09ea86a04237d592e01d95bf70f153aed4511f80768b
 ```
 
-Example 2: Running a temporary container to connect to the MariaDB server.
+Example 2: Running a temporary container to connect to the MariaDB Server.
 
 ```sh
 $ docker run --rm -it --network mariadb-server_default mariadb:10.3 mysql -h192.168.16.2 -uroot -p
