@@ -10,6 +10,7 @@ Content Session:
 * [MongoDB Client - Shell](#MongoDB-Client---Shell)
 * [MongoDB Client - GUI](#MongoDB-Client---GUI)
 * [The `mongo` Shell](#The-`mongo`-Shell)
+* [Querying the DB](#Querying-the-DB)
 * [Resources](#Resources)
 
 ### Pre-Requisites
