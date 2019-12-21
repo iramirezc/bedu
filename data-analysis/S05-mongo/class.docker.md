@@ -557,7 +557,7 @@ Example of a JSON array:
 
 The `mongo` Shell has some methods that can be useful when doing queries.
 
-#### `count()`
+##### `count()`
 
 Modifies the cursor to return the number of documents in the result set rather than the documents themselves.
 
@@ -566,7 +566,7 @@ Modifies the cursor to return the number of documents in the result set rather t
 // 6040
 ```
 
-#### `limit()`
+##### `limit()`
 
 Constrains the size of a cursor’s result set.
 
@@ -575,7 +575,7 @@ Constrains the size of a cursor’s result set.
 // returns the first 10 documents
 ```
 
-#### `min()`
+##### `min()`
 
 Specifies an inclusive lower index bound for a cursor.
 
@@ -587,7 +587,7 @@ Specifies an inclusive lower index bound for a cursor.
 // returns the documents with an id >= 6000
 ```
 
-#### `max()`
+##### `max()`
 
 Specifies an exclusive upper index bound for a cursor.
 
@@ -599,7 +599,7 @@ Specifies an exclusive upper index bound for a cursor.
 // returns the documents with an id < 10
 ```
 
-#### `pretty()`
+##### `pretty()`
 
 Configures the cursor to display results in an easy-to-read format.
 
@@ -608,7 +608,7 @@ Configures the cursor to display results in an easy-to-read format.
 // returns the documents formatted
 ```
 
-#### `skip()`
+##### `skip()`
 
 Returns a cursor that begins returning results only after passing or skipping a number of documents.
 
@@ -617,7 +617,7 @@ Returns a cursor that begins returning results only after passing or skipping a 
 // returns the documents that follow after skipping 100 documents
 ```
 
-#### `sort()`
+##### `sort()`
 
 Returns results ordered according to a sort specification.
 
