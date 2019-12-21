@@ -162,6 +162,14 @@ Usage:
 db.<collection>.find({})
 ```
 
+### Find & format all documents
+
+Usage:
+
+```js
+db.<collection>.find({}).pretty()
+```
+
 ### Find only the first N documents
 
 Usage:

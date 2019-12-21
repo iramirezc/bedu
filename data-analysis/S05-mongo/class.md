@@ -287,7 +287,7 @@ You can find most of the `mongo` commands in this [Mongo - Cheat Sheet](/docs/mo
 
 #### Create a new Database and a Collection
 
-Create a new Database using `yourLastName_yourFistName` as the DB name. Then, create an `users` collection.
+Create a new Database using `yourLastName_yourFirstName` as the DB name. Then, create an `users` collection.
 
 ```sh
 > show dbs
@@ -495,7 +495,7 @@ Example of a JSON array:
 >
 ```
 
-##### Find all documents
+##### Find all documents (Read)
 
 ```sh
 > db.users.find()
@@ -511,7 +511,7 @@ Example of a JSON array:
 >
 ```
 
-##### Find all documents by searching criteria
+##### Find all documents by searching criteria (Read)
 
 ```sh
 > db.users.find({ "gen": "M", "ocup": 15 })
@@ -552,9 +552,159 @@ Example of a JSON array:
 
 :cat: _**xercise 3**: Perform all the **CRUD** operations but using MongoDB Compass._
 
+#### `mongo` Shell Methods
+
+The `mongo` Shell has some methods that can be useful when doing queries.
+
+#### `count()`
+
+Modifies the cursor to return the number of documents in the result set rather than the documents themselves.
+
+```js
+> db.users.find({}).count()
+// 6040
+```
+
+#### `limit()`
+
+Constrains the size of a cursor’s result set.
+
+```js
+> db.users.find({}).limit(10)
+// returns the first 10 documents
+```
+
+#### `min()`
+
+Specifies an inclusive lower index bound for a cursor.
+
+> NOTE: you need to create an index and use hint().
+> `db.users.createIndex({ id: 1 })`
+
+```js
+> db.users.find({}).min({ id: 6000 }).hint({ id: 1 })
+// returns the documents with an id >= 6000
+```
+
+#### `max()`
+
+Specifies an exclusive upper index bound for a cursor.
+
+> NOTE: you need to create an index and use hint().
+> `db.users.createIndex({ id: 1 })`
+
+```js
+> db.users.find({}).max({ id: 10 }).hint({ id: 1 })
+// returns the documents with an id < 10
+```
+
+#### `pretty()`
+
+Configures the cursor to display results in an easy-to-read format.
+
+```js
+> db.users.find({}).pretty()
+// returns the documents formatted
+```
+
+#### `skip()`
+
+Returns a cursor that begins returning results only after passing or skipping a number of documents.
+
+```js
+> db.users.find({}).skip(100)
+// returns the documents that follow after skipping 100 documents
+```
+
+#### `sort()`
+
+Returns results ordered according to a sort specification.
+
+```js
+> db.users.find({}).sort({ cp: 1 })
+// returns the documents sorted by ZipCode in ascendant order.
+```
+
+### Querying the DB
+
+#### Basic Filtering
+
+##### Select all documents
+
+```js
+> db.users.find({})
+```
+
+##### Select all documents by equality condition (WHERE)
+
+```js
+> db.users.find({ id: 1 })
+```
+
+##### Select all documents by multiple conditions (AND)
+
+```js
+> db.users.find({ gen: 'F', edad: { $gt: 50 } })
+```
+
+##### Select all document by any condition (OR)
+
+```js
+> db.users.find({ $or: [{ id: { $lte: 10 } }, { cp: 55441 }] })
+```
+
+##### Select all documents that match the Regular expression (LIKE)
+
+```js
+> db.movies.find({ titulo: /story/i })
+```
+
+:cat: _**xercise 4**: How can you query using both AND and OR operators?._
+
+#### Query Selectors
+
+Some of the most common operators are:
+
+##### Comparison
+
+* `$eq` Equal to.
+* `$ne` Not equal to.
+* `$in` Any value in the array.
+* `$nin` Not in the array.
+* `$gt` Greater than.
+* `$gte` Greater than or equal to.
+* `$lt` Less than.
+* `$lte` Less than or equal to.
+* `$lt` Less than.
+
+##### Logical
+
+* `$and` Logical AND. Returns all documents that match both query clauses.
+* `$not` Returns all documents that do NOT match the query expression.
+* `$or` Logical OR. Returns all documents that match either query clause.
+* `$nor` Returns all documents that do NOT match any query clause.
+
+##### Element
+
+* `$exists` Matches documents that have the specified field
+* `$type` Selects documents if the field is of the specified type.
+
+##### Evaluation
+
+* `$regex` Selects documents that match a regular expression.
+* `$text` Performs text search.
+
+Take a look at the [documentation about Query Selectors](https://docs.mongodb.com/manual/reference/operator/query/#query-selectors) for a complete reference.
+
 ### Resources
 
 * [Mongo - Docker Hub](https://hub.docker.com/_/mongo)
 * [Docker Commands - Cheat Sheet](/docs/docker-cheat-sheet.md)
 * [Docker-Compose File - Cheat Sheet](/docs/docker-compose-cheat-sheet.md)
 * [Mongo - Cheat Sheet](/docs/mongo-cheat-sheet.md)
+* [The `mongo` Shell - MongoDB](https://docs.mongodb.com/manual/mongo/)
+* [MongoDB CRUD Operations - MongoDB](https://docs.mongodb.com/manual/crud/)
+* [Cursor Methods - MongoDB](https://docs.mongodb.com/manual/reference/method/js-cursor/)
+* [Query Documents - MongoDB](https://docs.mongodb.com/manual/tutorial/query-documents/)
+* [Query Selectors - MongoDB](https://docs.mongodb.com/manual/reference/operator/query/#query-selectors)
+* [MongoDB University](https://university.mongodb.com/)
