@@ -70,6 +70,20 @@ $ docker run hello-world
 # This message shows that your installation appears to be working correctly.
 ```
 
+### Docker cp
+
+Usage:
+
+```sh
+docker cp SRC_PATH CONTAINER:DEST_PATH
+```
+
+Example:
+
+```sh
+docker cp users.csv mariadb_server:/usr/src/users.csv
+```
+
 ## Docker Images
 
 ### Download an Image or a Repository
