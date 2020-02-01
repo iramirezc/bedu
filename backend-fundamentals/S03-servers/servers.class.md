@@ -5,29 +5,30 @@
 List of Content:
 
 * [Pre-Requisites](#Pre-Requisites)
-* [SSH](#SSH)
+* [Secure Shell (SSH)](#Secure-Shell-(SSH))
+* [Node.js Package Manager (NPM)](#Node.js-Package-Manager-(NPM))
 * [Reference](#Reference)
+
+---
 
 ### Pre-Requisites
 
-**1. A GitHub Account:**
+#### Services Accounts
 
-Create a [GitHub](https://github.com/) account.
+* Create a [GitHub](https://github.com/) account
+* Create a [DockerHub](https://hub.docker.com/) account
 
-**2. Git:**
+#### Software Required
 
-Install [Git](https://git-scm.com/) in your local machine.
+* [Git](https://git-scm.com/)
+* [Docker](https://www.docker.com/)
+* [Visual Studio Code](https://code.visualstudio.com/)
 
-**3. Docker Community Edition:**
+#### Docker Images
 
-Create a [DockerHub](https://hub.docker.com/) account and install [Docker](https://www.docker.com/) Community Edition.
+* Pull the [Ubuntu Docker Image](https://hub.docker.com/_/ubuntu/)
 
-**4. Pull the `Ubuntu` Docker Image:**
-
-```sh
-$ docker pull ubuntu
-# it will download the docker image
-```
+---
 
 ### Secure Shell (SSH)
 
@@ -40,14 +41,16 @@ If you don't have `ssh` installed in your local machine, then you can use a dock
 Spin up a `Ubuntu` container:
 
 ```sh
+# local machine
 $ docker run --name my-ubuntu -it ubuntu bash
 # it should run an Ubuntu container and open the container's terminal
-root@e7ddfa5be44c:/#
+# root@e7ddfa5be44c:/#
 ```
 
 Update the __APT__ (_Advanced Package Tool_):
 
 ```sh
+# my-ubuntu container
 $ apt-get update
 # it should update the packages lists
 ```
@@ -57,6 +60,7 @@ $ apt-get update
 Install SSH inside the container using `apt-get`:
 
 ```sh
+# my-ubuntu container
 $ apt-get install openssh-server
 # it should download and install the ssh client
 ```
@@ -64,6 +68,7 @@ $ apt-get install openssh-server
 Test the `ssh` installation:
 
 ```sh
+# my-ubuntu container
 $ ssh
 # usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-b bind_address] [-c cipher_spec]
 # ...
@@ -74,6 +79,7 @@ $ ssh
 Install Git inside the container:
 
 ```sh
+# my-ubuntu container
 $ apt-get install git
 # it should download and install git
 ```
@@ -83,8 +89,19 @@ $ apt-get install git
 Install VIM inside the container:
 
 ```sh
+# my-ubuntu container
 $ apt-get install vim
 # it should download and install vim
+```
+
+##### Installing cURL
+
+Install cURL inside the container:
+
+```sh
+# my-ubuntu container
+$ apt-get install curl
+# it should download and install curl
 ```
 
 #### Connecting to GitHub with SSH
@@ -289,9 +306,204 @@ Now you can check the status of your SSH key:
 * Click on __SSH and GPG keys__ from the left menu
 * Validate that your SSH key now says when it was the last time it was used in green color.
 
+---
+
+### Node.js Package Manager (NPM)
+
+NPM is the package manager for Node.js packages and modules.
+
+#### Creating a web server with Express.js
+
+We will use NPM to download the `Express.js` framework and build a web server.
+
+Pull the docker image `node:12.14.1-alpine3.9`
+
+```sh
+# local machine
+$ docker pull node:12.14.1-alpine3.9
+# 12.14.1-alpine3.9: Pulling from library/node
+# ...
+# Status: Downloaded newer image for node:12.14.1-alpine3.9
+```
+
+Run a container using the `sh` terminal.
+
+> _Note: The node's alpine version does NOT include the `bash` terminal_.
+
+```sh
+# local machine
+$ docker run --name my-server -it -p 0.0.0.0:8080:8080 node:12.14.1-alpine3.9 sh
+# now you should be inside the container's shell
+```
+
+Create a `server` folder inside the container's `/usr` directory:
+
+```sh
+# my-server container
+$ mkdir /usr/server && cd /usr/server
+# it should create and enter the server directory
+# /usr/server
+```
+
+Initialize a npm module:
+
+```sh
+# my-server container
+$ npm init
+# it should start a wizard to create the npm module
+```
+
+Complete the wizard:
+
+```sh
+package name: (server)
+version: (1.0.0)
+description: A basic express.js web server
+entry point: (index.js) server.js
+test command:
+git repository:
+keywords:
+author: Your Name <your_email@example.com>
+license: (ISC)
+```
+
+Now should you have a `package.json` file:
+
+```sh
+# my-server container
+$ ls
+# package.json
+```
+
+See the content of your `package.json` file:
+
+```sh
+# my-server container
+$ cat package.json
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "A basic express.js web server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Your Name <your_email@example.com>",
+  "license": "ISC"
+}
+```
+
+Install `express` from NPM:
+
+```sh
+# my-server container
+$ npm install express
+# added 50 packages from 37 contributors and audited 126 packages in 5.537s
+```
+
+Inspect your `package.json` file again, you should have `express` installed as a dependency:
+
+```sh
+# package.json
+{
+  ...
+  "dependencies": {
+    "express": "^x.x.x"
+  }
+}
+```
+
+Create a `server.js` file in your **local** machine with the following code:
+
+```js
+const express = require('express')
+const server = express()
+const port = 8080
+
+server.get('/', (req, res) => {
+  res.send({ message: 'Hello from Express server' })
+})
+
+server.listen(port, () => {
+  console.log(`Server listening on port ${port}...`)
+})
+```
+
+Copy the `server.js` file from your **local** machine to the container's path `/usr/server`:
+
+```sh
+# local machine
+$ docker cp server.js my-server:/usr/server
+# it should copy the server.js to the container
+```
+
+Go back to the container's terminal and run:
+
+```sh
+# my-server container
+$ node server.js
+# Server listening on port 8080...
+```
+
+Test the connection to the Express server.
+
+##### Alternative 1: Using a Web Browser
+
+Open the following url `localhost:8080` in the web browser of your preference. You should receive a JSON response:
+
+```json
+{ "message": "Hello from Express server" }
+```
+
+##### Alternative 2: Using `curl` from your local machine
+
+If you have `curl` installed in your **local** machine run:
+
+```sh
+# local machine
+$ curl localhost:8080
+# {"message":"Hello from Express server"}
+```
+
+##### Alternative 3: Using `curl` from another docker container
+
+You can use the previous `my-ubuntu` container to make a request to the `my-server` container.
+
+First, you will need to [install curl](#Installing-cURL) into the `my-ubuntu` container. Then, you will need to know in which IP address `my-server` is running:
+
+```sh
+# local machine
+$ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-server
+# 172.17.0.2
+# Note: (IP address may vary)
+```
+
+Finally, inside the `my-ubuntu` container run the `curl` command using the IP address you retrieve from the previous step:
+
+```sh
+# my-ubuntu container
+$ curl 172.17.0.2:8080
+# {"message":"Hello from Express server"}
+```
+
+Congratulations! You have created your first npm module!
+
+---
+
 ### Reference
 
-* [Ubuntu Docker Image - DockerHub](https://hub.docker.com/_/ubuntu/)
+#### Git & GitHub
+
 * [Connecting to GitHub with SSH - GitHub Help](https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh)
 * [First-Time Git Setup - Git Docs](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup)
-* [How does SSH Work - Article](https://www.hostinger.com/tutorials/ssh-tutorial-how-does-ssh-work)
+
+#### SSH
+
+* [How does SSH Work - Hostinger](https://www.hostinger.com/tutorials/ssh-tutorial-how-does-ssh-work)
+
+#### Docs
+
+* [NPM](https://www.npmjs.com/)
+* [Express.js](https://expressjs.com/)
+* [express - npm](https://www.npmjs.com/package/express)
+* [How To Use - curl](https://curl.haxx.se/docs/manpage.html)
