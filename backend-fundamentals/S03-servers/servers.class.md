@@ -8,26 +8,26 @@ List of Content:
 * [SSH](#SSH)
 * [Reference](#Reference)
 
+---
+
 ### Pre-Requisites
 
-**1. A GitHub Account:**
+#### Services Accounts
 
-Create a [GitHub](https://github.com/) account.
+* Create a [GitHub](https://github.com/) account
+* Create a [DockerHub](https://hub.docker.com/) account
 
-**2. Git:**
+#### Software Required
 
-Install [Git](https://git-scm.com/) in your local machine.
+* [Git](https://git-scm.com/)
+* [Docker](https://www.docker.com/)
+* [Visual Studio Code](https://code.visualstudio.com/)
 
-**3. Docker Community Edition:**
+#### Docker Images
 
-Create a [DockerHub](https://hub.docker.com/) account and install [Docker](https://www.docker.com/) Community Edition.
+* Pull the [Ubuntu Docker Image](https://hub.docker.com/_/ubuntu/)
 
-**4. Pull the `Ubuntu` Docker Image:**
-
-```sh
-$ docker pull ubuntu
-# it will download the docker image
-```
+---
 
 ### Secure Shell (SSH)
 
@@ -289,9 +289,15 @@ Now you can check the status of your SSH key:
 * Click on __SSH and GPG keys__ from the left menu
 * Validate that your SSH key now says when it was the last time it was used in green color.
 
+---
+
 ### Reference
 
-* [Ubuntu Docker Image - DockerHub](https://hub.docker.com/_/ubuntu/)
+#### Git & GitHub
+
 * [Connecting to GitHub with SSH - GitHub Help](https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh)
 * [First-Time Git Setup - Git Docs](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup)
-* [How does SSH Work - Article](https://www.hostinger.com/tutorials/ssh-tutorial-how-does-ssh-work)
+
+#### SSH
+
+* [How does SSH Work - Hostinger](https://www.hostinger.com/tutorials/ssh-tutorial-how-does-ssh-work)
