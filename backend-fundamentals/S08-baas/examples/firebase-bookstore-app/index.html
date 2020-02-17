@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Firebase Bookstore App</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    table * {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Bookstore Firebase App</h1>
+  <section>
+    <h2>Add New Book</h2>
+    <form id="addBookForm">
+      <input type="text" id="book-title" placeholder="Title" />
+      <input type="date" id="book-publishingDate" placeholder="Publishing Date" />
+      <input type="text" id="book-author" placeholder="Author" />
+      <button type="submit">Add Book</button>
+    </form>
+    <h2>Books</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Publishing Date</th>
+          <th>Author</th>
+        </tr>
+      </thead>
+      <tbody id="booksTable"></tbody>
+    </table>
+  </section>
+
+  <!-- Firebase CDN Libraries -->
+  <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-firestore.js"></script>
+  <!-- Application Code -->
+  <script src="app.js"></script>
+</body>
+
+</html>
