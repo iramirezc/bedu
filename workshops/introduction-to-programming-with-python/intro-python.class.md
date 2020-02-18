@@ -27,4 +27,5 @@
 * [An Introduction to Interactive Programming in Python (Part 1) - Coursera](https://www.coursera.org/learn/interactive-python-1)
 * [Pong - Completo (Versión en Español)](http://www.codeskulptor.org/#user47_NkcsN9Tw4bBFf6A.py)
 * [Pong - Completo (Versión en Inglés)](http://www.codeskulptor.org/#user40_iPtvIZs09ObCxnc.py)
+* [Pong - Calentamiento](http://www.codeskulptor.org/#user47_hsF8Gjxw3r2S1eZ.py)
 * [Pong - Sin Resolver](http://www.codeskulptor.org/#user47_MdEjtY8Wle9NqzI.py)
