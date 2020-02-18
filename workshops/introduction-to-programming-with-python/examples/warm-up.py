@@ -14,17 +14,11 @@ def dibujar(canvas):
     posicion[0] += velocidad[0]
     posicion[1] += velocidad[1]
     
-    if posicion[0] < 0:
+    if posicion[0] < 0 or posicion[0] > ANCHO:
         velocidad[0] = -velocidad[0]
-    elif posicion[0] > ANCHO:
-        velocidad[0] = -velocidad[0]
-    elif posicion[1] < 0:
-        velocidad[1] = -velocidad[1]
-    elif posicion[1] > ALTO:
+    elif posicion[1] < 0 or posicion[1] > ALTO:
         velocidad[1] = -velocidad[1]
 
-    
-
-frame = simplegui.create_frame("Rebote", ANCHO, ALTO)
+frame = simplegui.create_frame("Rebota", ANCHO, ALTO)
 frame.set_draw_handler(dibujar)
 frame.start()
